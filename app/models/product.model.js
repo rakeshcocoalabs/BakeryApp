@@ -23,48 +23,38 @@ var options = {
 };
 
 const product = mongoose.Schema({
-	status: Number,
 	name: String,
 	description: String,
-	qty: Number,
+	quantity: Number,
 	category: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Category'
 	},
-	image: [String],
-	subImages: [String],
-	costPrice: Number,
+	image: String,
+	subImages: Array,
 	brand:String,
+	costPrice: Number,
 	sellingPrice:Number,
-	meter: String,
 	variantsExists: Boolean,
 	variants:[{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Variant'
 	}],
 	discount: Number,
-	tSCreatedAt: Number,
-	tSModifiedAt: Number,
-	id: Number,
 	sku: String,
 	weight: Number,
 	height: Number,
 	width: Number,
 	length: Number,
-	//isManagedInventory: Boolean,
 	currency: String,
-	//rebate_price: String,
 	isActive: Boolean,
-	//isFeaturedNew: Boolean,
-	//inPromotion: Boolean,
-
 	isBuyable: Boolean,
 	isShippable: Boolean,
-	parentProduct_id: Number,
 	stockAvailable: Number,
-	numberSold: Number,
-	avaregeRating: Number,
-	outOfStock: Boolean
+	outOfStock: Boolean,
+	status: Number,
+	tSCreatedAt: Number,
+	tSModifiedAt: Number,
 }, options);
 
 module.exports = mongoose.model('Product', product, "Products");
