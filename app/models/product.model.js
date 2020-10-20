@@ -40,6 +40,10 @@ const product = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Variant'
 	}],
+	addOns: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Product'
+	}],
 	discount: Number,
 	sku: String,
 	weight: Number,
@@ -52,9 +56,12 @@ const product = mongoose.Schema({
 	isShippable: Boolean,
 	stockAvailable: Number,
 	outOfStock: Boolean,
+	averageRating: Number,
+	isVegOnly: Boolean,
+	isCombo: Boolean,
 	status: Number,
-	tSCreatedAt: Number,
-	tSModifiedAt: Number,
+	tsCreatedAt: Number,
+	tsModifiedAt: Number,
 }, options);
 
 module.exports = mongoose.model('Product', product, "Products");

@@ -1,12 +1,33 @@
 const mongoose = require('mongoose');
 
+function transform(ret) {
+	ret.id = ret._id;
+	delete ret._id;
+	delete ret.status;
+	delete ret.tSCreatedAt;
+	delete ret.tSModifiedAt;
+}
+var options = {
+	toObject: {
+		virtuals: true,
+		transform: function (doc, ret) {
+			transform(ret);
+		}
+	},
+	toJSON: {
+		virtuals: true,
+		transform: function (doc, ret) {
+			transform(ret);
+		}
+	}
+};
 
 const category = mongoose.Schema({
 	name: String,
 	image: String,
 	status: Number,
-	tSCreatedAt: Number,
-	tSModifiedAt: Number
+	tsCreatedAt: Number,
+	tsModifiedAt: Number
 
-})
-module.exports = mongoose.model('Category', category, "Categories");
+}, options)
+module.exports = mongoose.model('Category', category, 'Categories');
