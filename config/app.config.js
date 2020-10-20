@@ -1,4 +1,5 @@
-var commonStorePath = 'http://172.105.33.226/ecommerce-images'
+var commonStorePath = 'http://172.105.33.226/bakery-ecommerce-images';
+var commonImageStorePath = '/var/www/html/bakery-ecommerce-images/'
 module.exports = {
   gateway: {
     url: "http://localhost:5000"
@@ -8,7 +9,7 @@ module.exports = {
   },
   user: {
     // imageUploadPath: 'uploads',
-    imageUploadPath: '/var/www/html/ecommerce-images/users/',
+    imageUploadPath: commonImageStorePath + 'users/',
     imageBase: commonStorePath + '/users/',
     resultsPerPage: 30
   },
@@ -20,17 +21,17 @@ module.exports = {
   },
   banners: {
     // imageUploadPath: 'uploads',
-    imageUploadPath: '/var/www/html/ecommerce-images/banners/',
+    imageUploadPath: commonImageStorePath + 'banners/',
     imageBase: commonStorePath + '/banners/'
   },
   categories: {
     // imageUploadPath: 'uploads',
-    imageUploadPath: '/var/www/html/ecommerce-images/categories/',
+    imageUploadPath: commonImageStorePath + 'categories/',
     imageBase: commonStorePath + '/categories/'
   },
   products: {
     // imageUploadPath: 'uploads',
-    imageUploadPath: '/var/www/html/ecommerce-images/products/',
+    imageUploadPath: commonImageStorePath + 'products/',
     imageBase: commonStorePath + '/products/',
     resultsPerPage: 30
 

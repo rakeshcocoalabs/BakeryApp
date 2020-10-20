@@ -1,10 +1,14 @@
 const Product = require('../models/product.model');
 const Category = require('../models/categories.model');
 const Reviews = require('../models/review.model');
+const Banner = require('../models/banner.model');
 const config = require('../../config/app.config');
 const productConfig = config.products;
 const ObjectId = require('mongoose').Types.ObjectId;
 const Constants = require('../helpers/constants');
+const bannerConfig = config.banners;
+const productsConfig = config.products;
+const categoriesConfig = config.categories;
 
 // *** Product listing with pagination ***
 exports.list = async (req, res) => {
@@ -91,6 +95,7 @@ exports.list = async (req, res) => {
         res.status(200).send({
             success: 1,
             pagination: pagination,
+            imageBase: productConfig.imageBase,
             items: products
         });
     } catch (err) {
@@ -144,6 +149,55 @@ exports.detail = async (req, res) => {
             success: 1,
             item: productDetail
         });
+    } catch (err) {
+        res.status(500).send({
+            success: 0,
+            message: err.message
+        })
+    }
+}
+
+// *** Home summary api ***
+exports.home = async (req, res) => {
+    try {
+        let bannerFilter = {
+            status: 1
+        };
+        let bannerProjection = {
+            image: 1
+        };
+        let banners = await Banner.find(bannerFilter, bannerProjection);
+        let categoryFilter = {
+            status: 1
+        };
+        let categoryProjection = {
+            name: 1,
+            image: 1
+        };
+        let categoryList = await Category.find(categoryFilter, categoryProjection).limit(5);
+        let productFilter = {
+            status: 1
+        };
+        let productProjection = {
+            name: 1,
+            image: 1,
+            category: 1,
+            sellingPrice: 1,
+            averageRating: 1
+        };
+        let products = await Product.find(productFilter, productProjection).populate({
+            path: 'category',
+            select: 'name'
+        }).limit(5);
+        res.status(200).send({
+            success: 1,
+            bannerImageBase: bannerConfig.imageBase,
+            categoriesImageBase: categoriesConfig.imageBase,
+            productImageBase: productsConfig.imageBase,
+            banners: banners,
+            categoryList: categoryList,
+            productList: products
+        });;
     } catch (err) {
         res.status(500).send({
             success: 0,

@@ -15,10 +15,6 @@ const JWT_KEY = params_Config.development.jwt.secret;
 const pushNotificationHelper = require('../helpers/pushNotificationHelper');
 var constants = require('../helpers/constants');
 const productModel = require('../models/product.model');
-const {
-    off
-} = require('superagent');
-const e = require('express');
 
 var ObjectId = require('mongoose').Types.ObjectId;
 

@@ -5,6 +5,5 @@ const bannerSchema = mongoose.Schema({
     status: Number,
     tSCreatedAt: Number,
     tSModifiedAt: Number
-
-})
+});
 module.exports = mongoose.model('Banner', bannerSchema, "Banners");
