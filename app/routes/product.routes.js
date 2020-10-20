@@ -2,6 +2,6 @@ const auth = require('../middleware/auth.js');
 
 module.exports = (app) => { 
     const product = require('../controllers/product.controller');
-    app.get('/products', product.list);
-    app.get('/products/:id', product.detail);
+    app.get('/product', product.list);
+    app.get('/product/:id', product.detail);
 }
