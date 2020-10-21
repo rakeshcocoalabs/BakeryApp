@@ -3,6 +3,7 @@ const Category = require('../models/categories.model');
 const Reviews = require('../models/review.model');
 const Banner = require('../models/banner.model');
 const User = require('../models/user.model');
+const Variant = require('../models/variant.model');
 const config = require('../../config/app.config');
 const productConfig = config.products;
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -155,13 +156,12 @@ exports.detail = async (req, res) => {
         subImages: 1,
         description: 1,
         sellingPrice: 1,
-        averageRating: 1,
-        addOns: 1
+        averageRating: 1
     };
     try {
         let productDetail = await Product.findById(filter, projection).populate({
-            path: 'addOns',
-            select: 'name sellingPrice'
+            path: 'variants',
+            select: 'size costPrice unit sellingPrice currency'
         }).lean();
         let userData = await User.findById({
             _id: userId,
@@ -183,11 +183,10 @@ exports.detail = async (req, res) => {
             item: productDetail
         });
     } catch (err) {
-        // res.status(500).send({
-        //     success: 0,
-        //     message: err.message
-        // })
-        console.log(err);
+        res.status(500).send({
+            success: 0,
+            message: err.message
+        })
     }
 }
 
