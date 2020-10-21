@@ -1,7 +1,7 @@
 var stringify = require('json-stringify-safe');
 var UserModel = require('../models/user.model');
 var CartModel = require('../models/cart.model');
-
+const Category = require('../models/categories.model');
 var PushNotification = require('../models/pushNotification.model');
 const Otp = require('../models/otp.model');
 const uuidv4 = require('uuid/v4');
@@ -373,9 +373,14 @@ exports.favouritesList = async (req, res) => {
                 _id: item._id
             }, {
                 sellingPrice: 1,
+                averageRating: 1,
                 costPrice: 1,
+                category: 1,
                 name: 1,
                 image: 1
+            }).populate({
+                path: 'category',
+                select: 'name'
             }).catch(err => {
                 return {
                     success: 0,
@@ -953,7 +958,9 @@ exports.list = async (req, res) => {
         }).skip(offset).limit(perPage).sort({
             'tSCreatedAt': -1
         });
-        let itemsCount = await UserModel.countDocuments({status: 1});
+        let itemsCount = await UserModel.countDocuments({
+            status: 1
+        });
         totalPages = itemsCount / perPage;
         totalPages = Math.ceil(totalPages);
         let hasNextPage = page < totalPages;
