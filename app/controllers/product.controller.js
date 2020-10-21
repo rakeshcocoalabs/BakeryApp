@@ -151,6 +151,7 @@ exports.detail = async (req, res) => {
     let projection = {
         name: 1,
         image: 1,
+        quantity: 1,
         subImages: 1,
         description: 1,
         sellingPrice: 1,
