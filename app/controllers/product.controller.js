@@ -85,18 +85,7 @@ exports.list = async (req, res) => {
             select: 'name'
         }).skip(offset).limit(perPage).sort(sort).lean();
         let itemsCount = await Product.countDocuments(filter);
-        let userData = await User.findById({
-            _id: userId,
-            status: 1
-        });
-        let wishList = userData.wishlist;
-        for (let i = 0; i < products.length; i++) {
-            if (wishList.includes(products[i]._id)) {
-                products[i].isFavourite = true;
-            } else {
-                products[i].isFavourite = false;
-            }
-        }
+        let productList = await favouriteOrNot(products, userId);
         totalPages = itemsCount / perPage;
         totalPages = Math.ceil(totalPages);
         let hasNextPage = page < totalPages;
@@ -111,7 +100,7 @@ exports.list = async (req, res) => {
             success: 1,
             pagination: pagination,
             imageBase: productConfig.imageBase,
-            items: products
+            items: productList
         });
     } catch (err) {
         res.status(500).send({
@@ -121,8 +110,26 @@ exports.list = async (req, res) => {
     }
 }
 
+async function favouriteOrNot(products, userId) {
+    let userData = await User.findById({
+        _id: userId,
+        status: 1
+    });
+    let wishList = userData.wishlist;
+    for (let i = 0; i < products.length; i++) {
+        if (wishList.includes(products[i]._id)) {
+            products[i].isFavourite = true;
+        } else {
+            products[i].isFavourite = false;
+        }
+    }
+    return products
+}
+
 // *** Product detail ***
 exports.detail = async (req, res) => {
+    let userDataz = req.identity.data;
+    let userId = userDataz.id;
     let id = req.params.id;
     var isValidId = ObjectId.isValid(id);
     if (!isValidId) {
@@ -155,6 +162,16 @@ exports.detail = async (req, res) => {
             path: 'addOns',
             select: 'name sellingPrice'
         }).lean();
+        let userData = await User.findById({
+            _id: userId,
+            status: 1
+        });
+        let wishList = userData.wishlist;
+        if (wishList.includes(productDetail._id)) {
+            productDetail.isFavourite = true;
+        } else {
+            productDetail.isFavourite = false;
+        }
         let totalReviews = await Reviews.countDocuments({
             product: id,
             status: 1
@@ -165,15 +182,18 @@ exports.detail = async (req, res) => {
             item: productDetail
         });
     } catch (err) {
-        res.status(500).send({
-            success: 0,
-            message: err.message
-        })
+        // res.status(500).send({
+        //     success: 0,
+        //     message: err.message
+        // })
+        console.log(err);
     }
 }
 
 // *** Home summary api ***
 exports.home = async (req, res) => {
+    let userDataz = req.identity.data;
+    let userId = userDataz.id;
     try {
         let bannerFilter = {
             status: 1
@@ -203,7 +223,8 @@ exports.home = async (req, res) => {
         let products = await Product.find(productFilter, productProjection).populate({
             path: 'category',
             select: 'name'
-        }).limit(5);
+        }).limit(5).lean();
+        let productList = await favouriteOrNot(products, userId);
         res.status(200).send({
             success: 1,
             bannerImageBase: bannerConfig.imageBase,
@@ -211,7 +232,7 @@ exports.home = async (req, res) => {
             productImageBase: productsConfig.imageBase,
             banners: banners,
             categoryList: categoryList,
-            productList: products
+            productList: productList
         });;
     } catch (err) {
         res.status(500).send({
