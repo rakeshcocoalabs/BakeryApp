@@ -2,6 +2,7 @@ const Product = require('../models/product.model');
 const Category = require('../models/categories.model');
 const Reviews = require('../models/review.model');
 const Banner = require('../models/banner.model');
+const User = require('../models/user.model');
 const config = require('../../config/app.config');
 const productConfig = config.products;
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -12,6 +13,8 @@ const categoriesConfig = config.categories;
 
 // *** Product listing with pagination ***
 exports.list = async (req, res) => {
+    let userDataz = req.identity.data;
+    let userId = userDataz.id;
     let params = req.query;
     var search = params.search || '.*';
     search = search + '.*';
@@ -80,8 +83,20 @@ exports.list = async (req, res) => {
         let products = await Product.find(filter, projection).populate({
             path: 'category',
             select: 'name'
-        }).skip(offset).limit(perPage).sort(sort);
+        }).skip(offset).limit(perPage).sort(sort).lean();
         let itemsCount = await Product.countDocuments(filter);
+        let userData = await User.findById({
+            _id: userId,
+            status: 1
+        });
+        let wishList = userData.wishlist;
+        for (let i = 0; i < products.length; i++) {
+            if (wishList.includes(products[i]._id)) {
+                products[i].isFavourite = true;
+            } else {
+                products[i].isFavourite = false;
+            }
+        }
         totalPages = itemsCount / perPage;
         totalPages = Math.ceil(totalPages);
         let hasNextPage = page < totalPages;

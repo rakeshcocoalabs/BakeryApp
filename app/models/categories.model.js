@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 function transform(ret) {
-	ret.id = ret._id;
-	delete ret._id;
 	delete ret.status;
 	delete ret.tSCreatedAt;
 	delete ret.tSModifiedAt;
