@@ -156,6 +156,7 @@ exports.detail = async (req, res) => {
         quantity: 1,
         subImages: 1,
         description: 1,
+        costPrice: 1,
         sellingPrice: 1,
         averageRating: 1
     };
@@ -187,7 +188,6 @@ exports.detail = async (req, res) => {
             status: 1
         }, {
             name: 1,
-            costPrice: 1,
             sellingPrice: 1,
             image: 1,
             averageRating: 1
