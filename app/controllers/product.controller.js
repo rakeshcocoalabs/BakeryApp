@@ -152,6 +152,7 @@ exports.detail = async (req, res) => {
     let projection = {
         name: 1,
         image: 1,
+        category: 1,
         quantity: 1,
         subImages: 1,
         description: 1,
@@ -178,9 +179,28 @@ exports.detail = async (req, res) => {
             status: 1
         });
         productDetail['totalReviews'] = totalReviews;
+        let relatedProducts = await Product.find({
+            category: productDetail.category,
+            _id: {
+                $ne: productDetail._id
+            },
+            status: 1
+        }, {
+            name: 1,
+            costPrice: 1,
+            sellingPrice: 1,
+            image: 1,
+            averageRating: 1
+        }).populate({
+            path: 'category',
+            select: 'name'
+        }).lean();
+        relatedProducts = await favouriteOrNot(relatedProducts, userId);
         res.status(200).send({
             success: 1,
-            item: productDetail
+            imageBase: productsConfig.imageBase,
+            item: productDetail,
+            relatedProducts: relatedProducts
         });
     } catch (err) {
         res.status(500).send({
