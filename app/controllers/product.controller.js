@@ -154,7 +154,6 @@ exports.detail = async (req, res) => {
         image: 1,
         category: 1,
         quantity: 1,
-        subImages: 1,
         description: 1,
         costPrice: 1,
         sellingPrice: 1,

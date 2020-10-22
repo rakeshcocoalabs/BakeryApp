@@ -28,9 +28,8 @@ const product = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Category'
 	},
-	image: String,
-	subImages: Array,
-	brand:String,
+	image: Array,
+	brand: String,
 	costPrice: Number,
 	sellingPrice:Number,
 	variantsExists: Boolean,
