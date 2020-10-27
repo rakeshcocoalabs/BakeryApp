@@ -1,4 +1,6 @@
-var commonStorePath = 'http://172.105.33.226/bakery-ecommerce-images';
+// var commonStorePath = 'http://172.105.33.226/bakery-ecommerce-images';
+var commonStorePath = 'http://45.79.120.216/bakery-ecommerce-images';
+
 var commonImageStorePath = '/var/www/html/bakery-ecommerce-images/'
 module.exports = {
   gateway: {
