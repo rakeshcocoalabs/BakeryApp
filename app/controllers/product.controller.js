@@ -243,7 +243,7 @@ exports.home = async (req, res) => {
             name: 1,
             image: 1
         };
-        let categoryList = await Category.find(categoryFilter, categoryProjection).limit(5);
+        let categoryList = await Category.find(categoryFilter, categoryProjection).limit(10);
         let productFilter = {
             status: 1
         };
@@ -257,7 +257,7 @@ exports.home = async (req, res) => {
         let products = await Product.find(productFilter, productProjection).populate({
             path: 'category',
             select: 'name'
-        }).limit(5).lean();
+        }).limit(10).lean();
         let productList = await favouriteOrNot(products, userId);
         res.status(200).send({
             success: 1,
