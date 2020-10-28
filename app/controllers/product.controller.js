@@ -94,7 +94,6 @@ exports.list = async (req, res) => {
         sellingPrice: 1,
         averageRating: 1
     };
-    console.log(filter);
     try {
         let products = await Product.find(filter, projection).populate({
             path: 'category',
