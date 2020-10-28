@@ -20,7 +20,8 @@ exports.list = async (req, res) => {
     var search = params.search || '.*';
     search = search + '.*';
     let sortValue = params.sort;
-    let filterValue = params.filter;
+    let category = params.category;
+    let filterValue = req.body.filter;
     let page = Number(params.page) || 1;
     page = page > 0 ? page : 1;
     let perPage = Number(params.perPage) || productConfig.resultsPerPage;
@@ -35,12 +36,15 @@ exports.list = async (req, res) => {
         }
     }
     if (filterValue) {
-        if ((filterValue != Constants.veg) && (filterValue != Constants.nonVeg) && (filterValue != Constants.combo) && (filterValue != Constants.fastFood)) {
-            return res.status(400).send({
-                success: 0,
-                message: 'incorrect filter value'
-            })
+        for (let i = 0; i < filterValue.length; i++) {
+            if ((filterValue[i] != Constants.veg) && (filterValue[i] != Constants.nonVeg) && (filterValue[i] != Constants.combo) && (filterValue[i] != Constants.fastFood)) {
+                return res.status(400).send({
+                    success: 0,
+                    message: `incorrect filter value at index ${i}`
+                })
+            }
         }
+
     }
     // sort
     let sort = {};
@@ -63,16 +67,25 @@ exports.list = async (req, res) => {
             }
         }]
     };
-    if (filterValue == Constants.veg) {
-        filter['isVegOnly'] = true;
-        filter['status'] = 1;
-    } else if (filterValue == Constants.nonVeg) {
-        filter['isVegOnly'] = false;
-        filter['status'] = 1;
-    } else if (filterValue == Constants.combo) {
-        filter['isCombo'] = true;
-        filter['status'] = 1;
+    for (let i = 0; i < filterValue.length; i++) {
+        if (filterValue[i] == Constants.veg) {
+            filter['isVegOnly'] = true;
+            filter['status'] = 1;
+        }
+        if (filterValue[i] == Constants.nonVeg) {
+            filter['isVegOnly'] = false;
+            filter['status'] = 1;
+        }
+        if (filterValue[i] == Constants.combo) {
+            filter['isCombo'] = true;
+            filter['status'] = 1;
+        }
     }
+
+    if(category) {
+        filter['category'] = ObjectId(category);
+    }
+
     let projection = {
         name: 1,
         image: 1,
