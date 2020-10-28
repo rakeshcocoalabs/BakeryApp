@@ -35,17 +35,7 @@ exports.list = async (req, res) => {
             })
         }
     }
-    if (filterValue) {
-        for (let i = 0; i < filterValue.length; i++) {
-            if ((filterValue[i] != Constants.veg) && (filterValue[i] != Constants.nonVeg) && (filterValue[i] != Constants.combo) && (filterValue[i] != Constants.fastFood)) {
-                return res.status(400).send({
-                    success: 0,
-                    message: `incorrect filter value at index ${i}`
-                })
-            }
-        }
 
-    }
     // sort
     let sort = {};
     if (sortValue == Constants.lowToHigh) {
@@ -67,22 +57,33 @@ exports.list = async (req, res) => {
             }
         }]
     };
-    for (let i = 0; i < filterValue.length; i++) {
-        if (filterValue[i] == Constants.veg) {
-            filter['isVegOnly'] = true;
-            filter['status'] = 1;
+    if (filterValue) {
+        for (let i = 0; i < filterValue.length; i++) {
+            if ((filterValue[i] != Constants.veg) && (filterValue[i] != Constants.nonVeg) && (filterValue[i] != Constants.combo) && (filterValue[i] != Constants.fastFood)) {
+                return res.status(400).send({
+                    success: 0,
+                    message: `incorrect filter value at index ${i}`
+                })
+            }
         }
-        if (filterValue[i] == Constants.nonVeg) {
-            filter['isVegOnly'] = false;
-            filter['status'] = 1;
-        }
-        if (filterValue[i] == Constants.combo) {
-            filter['isCombo'] = true;
-            filter['status'] = 1;
+        for (let i = 0; i < filterValue.length; i++) {
+            if (filterValue[i] == Constants.veg) {
+                filter['isVegOnly'] = true;
+                filter['status'] = 1;
+            }
+            if (filterValue[i] == Constants.nonVeg) {
+                filter['isVegOnly'] = false;
+                filter['status'] = 1;
+            }
+            if (filterValue[i] == Constants.combo) {
+                filter['isCombo'] = true;
+                filter['status'] = 1;
+            }
         }
     }
 
-    if(category) {
+
+    if (category) {
         filter['category'] = ObjectId(category);
     }
 
@@ -93,6 +94,7 @@ exports.list = async (req, res) => {
         sellingPrice: 1,
         averageRating: 1
     };
+    console.log(filter);
     try {
         let products = await Product.find(filter, projection).populate({
             path: 'category',
