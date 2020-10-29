@@ -42,7 +42,7 @@ exports.create = async (req, res) => {
             status: 1,
             content: params.review_message,
             user: userId,
-            productId: params.product,
+            product: params.product,
             rating: params.rating,
             tsCreatedAt: Date.now(),
             tsModifiedAt: null
@@ -79,7 +79,7 @@ exports.list = async (req, res) => {
 
     findCriteria.status = 1;
 
-    findCriteria.productId = params.product;
+    findCriteria.product = params.product;
 
     let projection = {};
 
