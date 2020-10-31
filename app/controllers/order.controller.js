@@ -15,6 +15,7 @@ var statusUpdateHelper = require('../helpers/statusUpdateHelper')
 var stockValidator = require('../validators/stock.validator');
 
 
+
 exports.checkout = async (req, res) => {
     var params = req.body;
 
@@ -299,7 +300,13 @@ exports.getOrderDetail = async(req,res) =>{
 if (orderData && orderData.success && (orderData.success === 0)) {
     return res.send(orderData);
 }
+
 if(orderData){
+orderData = JSON.parse(JSON.stringify(orderData));
+var products = orderData.products;
+orderData.products = await products.filter(function (el) {
+    return el.status === 1;
+});
     return res.send({
         success: 1,
         imageBase: productsConfig.imageBase,
