@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const paramsConfig = require('../../config/app.config');
 var otpConfig = paramsConfig.otp;
 var usersConfig = paramsConfig.user;
+var productConfig = paramsConfig.products;
 const params_Config = require('../../config/params.config');
 const JWT_KEY = params_Config.development.jwt.secret;
 const pushNotificationHelper = require('../helpers/pushNotificationHelper');
@@ -49,16 +50,16 @@ exports.filtersList = async (req, res) => {
 
             {
                 name: "price low to high",
-                key: "priceLowToHigh"
+                key: "lowToHigh"
 
             },
             {
                 name: "price high to low",
-                key: "priceHighToLow"
+                key: "highToLow"
             },
             {
                 name: "highest rated",
-                key: "highestRated"
+                key: "rating"
             }
         ]
     })
@@ -409,7 +410,7 @@ exports.favouritesList = async (req, res) => {
         };
         res.status(200).send({
             success: 1,
-            imageBase: usersConfig.imageBase,
+            imageBase: productConfig.imageBase,
             pagination: pagination,
             items: wishlistinfo
         });
